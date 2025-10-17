@@ -4,6 +4,7 @@
 /// within a single row.  The default [`menuThenWrap`] strategy first
 /// collapses trailing items into an overflow menu and, if the items still
 /// cannot fit, allows the remaining items to wrap onto additional rows.
+library;
 
 enum ConnectedOverflowStrategy {
   /// Never use an overflow menu; if a row overflows, it will simply wrap

@@ -2,12 +2,13 @@
 ///
 /// This file exports the primary widget and supporting models needed to
 /// construct a connected button group.  The group is inspired by
-/// Material 3 Expressive, supporting split-buttons and menus as
+/// Material 3 Expressive, supporting split-buttons and menus as
 /// described in the documentation.  See the README and example for
 /// usage details.
 
-library connected_button_group;
+library;
 
+// Public API exports
 export 'src/connected_button_group.dart';
 export 'src/item.dart';
 export 'src/menu_entry.dart';

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Theme data for [ConnectedButtonGroup].
@@ -23,7 +22,7 @@ class ConnectedButtonGroupThemeData
   });
 
   /// The background colour of the group container.  This applies behind
-  /// all items.  Defaults to [ColorScheme.surfaceVariant].
+  /// all items.  Defaults to [ColorScheme.surfaceContainerHighest].
   final Color? containerColor;
 
   /// The background colour of a selected item.  Defaults to
@@ -67,8 +66,7 @@ class ConnectedButtonGroupThemeData
       selectedContentColor: selectedContentColor ?? this.selectedContentColor,
       unselectedContentColor:
           unselectedContentColor ?? this.unselectedContentColor,
-      disabledContentColor:
-          disabledContentColor ?? this.disabledContentColor,
+      disabledContentColor: disabledContentColor ?? this.disabledContentColor,
       dividerColor: dividerColor ?? this.dividerColor,
       focusOutlineColor: focusOutlineColor ?? this.focusOutlineColor,
     );
@@ -76,21 +74,38 @@ class ConnectedButtonGroupThemeData
 
   @override
   ConnectedButtonGroupThemeData lerp(
-      ThemeExtension<ConnectedButtonGroupThemeData>? other, double t) {
+    ThemeExtension<ConnectedButtonGroupThemeData>? other,
+    double t,
+  ) {
     if (other is! ConnectedButtonGroupThemeData) return this;
     return ConnectedButtonGroupThemeData(
       containerColor: Color.lerp(containerColor, other.containerColor, t),
-      selectedContainerColor:
-          Color.lerp(selectedContainerColor, other.selectedContainerColor, t),
-      selectedContentColor:
-          Color.lerp(selectedContentColor, other.selectedContentColor, t),
-      unselectedContentColor:
-          Color.lerp(unselectedContentColor, other.unselectedContentColor, t),
-      disabledContentColor:
-          Color.lerp(disabledContentColor, other.disabledContentColor, t),
+      selectedContainerColor: Color.lerp(
+        selectedContainerColor,
+        other.selectedContainerColor,
+        t,
+      ),
+      selectedContentColor: Color.lerp(
+        selectedContentColor,
+        other.selectedContentColor,
+        t,
+      ),
+      unselectedContentColor: Color.lerp(
+        unselectedContentColor,
+        other.unselectedContentColor,
+        t,
+      ),
+      disabledContentColor: Color.lerp(
+        disabledContentColor,
+        other.disabledContentColor,
+        t,
+      ),
       dividerColor: Color.lerp(dividerColor, other.dividerColor, t),
-      focusOutlineColor:
-          Color.lerp(focusOutlineColor, other.focusOutlineColor, t),
+      focusOutlineColor: Color.lerp(
+        focusOutlineColor,
+        other.focusOutlineColor,
+        t,
+      ),
     );
   }
 }
