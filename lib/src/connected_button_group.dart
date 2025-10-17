@@ -258,11 +258,11 @@ class ConnectedButtonGroup<T> extends StatelessWidget {
       final bool forceMenu =
           overflowStrategy == ConnectedOverflowStrategy.menu ||
           overflowStrategy == ConnectedOverflowStrategy.menuThenWrap;
-      final bool allowWrap =
+      /*      final bool allowWrap =
           overflowStrategy == ConnectedOverflowStrategy.wrapThenMenu ||
           overflowStrategy == ConnectedOverflowStrategy.none ||
           (overflowStrategy == ConnectedOverflowStrategy.menuThenWrap &&
-              !hasMoreItems);
+              !hasMoreItems);*/
       if (hasMoreItems && forceMenu) {
         // We need to fit the overflow handle into the current row.  Find
         // the minimal suffix of current items that can be replaced by

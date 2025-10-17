@@ -27,7 +27,7 @@ class _PlainMenuButtonSegment<T> extends StatelessWidget {
   final List<ConnectedButtonItem<T>> overflowMenu;
   final ConnectedButtonGroupThemeData theme;
 
-  List<PopupMenuEntry<ConnectedMenuEntry<T>>> _buildMenuEntries(
+  /*  List<PopupMenuEntry<ConnectedMenuEntry<T>>> _buildMenuEntries(
     BuildContext context,
   ) {
     final menu = item.menu ?? <ConnectedMenuEntry<T>>[];
@@ -42,7 +42,7 @@ class _PlainMenuButtonSegment<T> extends StatelessWidget {
       // no-op; the overflow handle will have its own menu set later.
     }
     return entries;
-  }
+  }*/
 
   PopupMenuEntry<ConnectedMenuEntry<T>> _popupEntry(
     ConnectedMenuEntry<T> entry,
