@@ -1,0 +1,25 @@
+name: connected_button_group
+description: A Flutter package providing a connected button group widget supporting Material 3 Expressive design with split-button and menus.
+version: 0.1.0
+#homepage: https://bruckcode.de
+repository:
+issue_tracker:
+
+environment:
+  sdk: ^3.9.2
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+#screenshots:
+
+# The following section is specific to Flutter packages.
+flutter:
+
