@@ -1,190 +1,294 @@
-![GitHub stars](https://img.shields.io/github/stars/BruckCode/connected_button_group) ![GitHub license](https://img.shields.io/github/license/BruckCode/connected_button_group) [![pub package](https://img.shields.io/pub/v/connected_button_group.svg)](https://pub.dev/packages/connected_button_group)
+# button_group
 
-`connected_button_group` is a Flutter widget that arranges multiple related
-controls into a single continuous pill‑shaped container, following the
-Material 3 Expressive design pattern.  The widget supports
-single‑selection and action‑only modes, split‑buttons, attached menus
-and automatic overflow handling.
+![GitHub stars](https://img.shields.io/github/stars/EmilyMonestone/button_group) ![GitHub license](https://img.shields.io/github/license/EmilyMonestone/button_group) [![pub package](https://img.shields.io/pub/v/button_group.svg)](https://pub.dev/packages/button_group)
 
-## 📚 Table of Contents
+## Overview
 
-- [🚀 Features](#-features)
-- [🏁 Getting Started](#-getting-started)
-- [🔧 Usage](#-usage)
-- [🎯 Examples](#-examples)
-- [⚙️ Parameters](#-parameters)
-- [👤 Author](#-author)
+`button_group` is a Flutter package that helps you lay out multiple related Material buttons as a cohesive group. It follows the Material 3 Expressive pattern and supports connected and standard styles, overflow handling, optional split buttons (with attached menus), and multi‑row wrapping. The widget is purely structural — it does not impose selection logic; each child button keeps its own onPressed behavior.
 
-## 🚀 Features
+## Table of Contents
 
-* **Unified control:** Arrange a series of buttons into one pill
-  container with coordinated interactions.
-* **Flexible content:** Each segment can display text, an icon, or an
-  icon+label combination.
-* **Selection and actions:** Use a `value` and `onChanged` callback to
-  enable single selection or omit them to treat the group as a toolbar
-  where each segment invokes `onPressed`.
-* **Menus & split‑buttons:** Attach a menu to any item; if a
-  `ConnectedButtonItem` supplies both a menu and a primary action, it
-  renders as a split‑button with distinct tap targets.
-* **Automatic overflow:** When items exceed the available width, the
-  trailing buttons collapse into a **“More”** menu.  If still too wide
-  the group wraps to additional rows.
-* **Customisable layout:** Configure overflow strategy, maximum rows,
-  row spacing and internal padding.  You can also supply a custom
-  overflow handle.
-* **Theming support:** Override colours and styles via a
-  `ConnectedButtonGroupThemeData` or globally through a
-  `ThemeExtension`.
+- [Overview](#overview)
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Setup and Running Locally (example app)](#setup-and-running-locally-example-app)
+- [Usage](#usage)
+- [Scripts and Commands](#scripts-and-commands)
+- [Environment Variables](#environment-variables)
+- [Tests](#tests)
+- [Project Structure](#project-structure)
+- [License](#license)
+- [Author](#author)
 
-## 🏁 Getting Started
+## Features
 
-Add this package to your `pubspec.yaml`:
+- Material 3 inspired button groups
+  - ButtonGroupType.connected and ButtonGroupType.standard
+  - GroupShape.round or GroupShape.square
+  - Size ramp via GroupSize: xs, s, m (default), l, xl
+- Smart overflow handling via OverflowStrategy
+  - menu (default), wrap
+- Optional multi‑row layout with maxLines and rowSpacing
+- Customizable padding per row (runPadding)
+- Optional custom overflow “More” button (moreBuilder)
+- Optional theming via ButtonGroupThemeData and MenuThemeData
+- SplitButton support with attached menu entries (MenuEntry)
+
+## Requirements
+
+- Dart SDK: ^3.9.2
+- Flutter SDK: >=1.17.0
+- Platforms: Flutter mobile, web, and desktop are supported by the example app; the widget itself is platform‑agnostic.
+
+## Installation
+
+Add the dependency to your app’s pubspec.yaml:
 
 ```yaml
 dependencies:
-  connected_button_group: ^0.0.1
+  flutter:
+    sdk: flutter
+  button_group: ^0.1.0
 ```
 
-Then install with `flutter pub get`.  To see the widget in action,
-clone this repository and run the example:
+Then fetch packages:
 
-```sh
-cd example
-flutter run
-```
+- flutter pub get
 
-## 🔧 Usage
+## Setup and Running Locally (example app)
 
-Import the package and create a `ConnectedButtonGroup` with a list of
-`ConnectedButtonItem`s.  Provide a `value` and `onChanged` callback to
-enable single selection.  Omit `value` and `onChanged` to use the
-group in action‑only mode where each item triggers `onPressed`.
+This repository includes an example app showcasing the widget.
+
+- Clone the repo
+- Open the project in your IDE or a terminal
+- Commands:
+  - cd example
+  - flutter pub get
+  - flutter run
+
+To run on a specific device:
+
+- flutter run -d chrome
+- flutter run -d windows
+- flutter run -d ios
+- flutter run -d android
+
+## Usage
+
+Import the package and use ButtonGroup in your widget tree. Minimal example:
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:connected_button_group/connected_button_group.dart';
+import 'package:button_group/button_group.dart';
 
-enum ViewMode { list, grid, map, settings }
-
-class ExampleWidget extends StatefulWidget {
-  const ExampleWidget({super.key});
-  @override
-  State<ExampleWidget> createState() => _ExampleWidgetState();
-}
-
-class _ExampleWidgetState extends State<ExampleWidget> {
-  ViewMode _mode = ViewMode.list;
+class MyWidget extends StatelessWidget {
+  const MyWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ConnectedButtonGroup<ViewMode>(
-      items: [
-        ConnectedButtonItem(
-          value: ViewMode.list,
-          icon: Icons.view_list,
-          label: 'List',
+    return ButtonGroup(
+      type: ButtonGroupType.connected,
+      size: GroupSize.m,
+      shape: GroupShape.round,
+      overflowStrategy: OverflowStrategy.menu,
+      children: [
+        FilledButton.icon(
+          onPressed: () {},
+          icon: const Icon(Icons.add),
+          label: const Text('Create'),
         ),
-        ConnectedButtonItem(
-          value: ViewMode.grid,
-          icon: Icons.grid_view,
-          label: 'Grid',
+        FilledButton.icon(
+          onPressed: () {},
+          icon: const Icon(Icons.edit),
+          label: const Text('Edit'),
         ),
-        // Split‑button: default action + menu
-        ConnectedButtonItem(
-          value: ViewMode.map,
-          icon: Icons.map,
-          label: 'Map',
-          isSplit: true,
-          onPrimaryPressed: () {
-            // perform default map action
-          },
-          menu: [
-            ConnectedMenuEntry(label: 'Default', value: ViewMode.map),
-            ConnectedMenuEntry(label: 'Satellite', value: ViewMode.map),
-            ConnectedMenuEntry(label: 'Terrain', value: ViewMode.map),
+        SplitButton(
+          primaryChild: FilledButton.icon(
+            onPressed: () {},
+            icon: const Icon(Icons.file_upload),
+            label: const Text('Export'),
+          ),
+          menuEntries: [
+            MenuEntry('CSV', onSelected: () {}),
+            MenuEntry('XLSX', onSelected: () {}),
+            MenuEntry('PDF', onSelected: () {}),
           ],
-        ),
-        // Overflow / menu item
-        ConnectedButtonItem(
-          value: ViewMode.settings,
-          icon: Icons.settings,
-          label: 'Settings',
-          menu: [
-            ConnectedMenuEntry(label: 'Profile', value: ViewMode.settings),
-            ConnectedMenuEntry(label: 'Logout', value: ViewMode.settings, destructive: true),
-          ],
+          onPrimaryPressed: () {},
         ),
       ],
-      value: _mode,
-      onChanged: (mode) => setState(() => _mode = mode),
-      onMenuItemSelected: (pair) {
-        // Called when a menu entry is selected.
-        debugPrint('Selected ${pair.$2.label} from ${pair.$1}');
-      },
     );
   }
 }
 ```
 
-## 🎯 Examples
+For a complete runnable demo, see example/lib/main.dart.
 
-You can find a full example in the `example` directory.  Run it with
+Core parameters (with defaults):
 
-```sh
-flutter run -d chrome
+- children (required): List<Widget> of Material buttons (e.g., FilledButton, OutlinedButton, IconButton, SplitButton)
+- type: ButtonGroupType = ButtonGroupType.connected
+- size: GroupSize = GroupSize.m
+- shape: GroupShape = GroupShape.round
+- overflowStrategy: OverflowStrategy = OverflowStrategy.menu
+- maxLines: int? = null (no limit)
+- rowSpacing: double = 8.0
+- runPadding: EdgeInsets = EdgeInsets.symmetric(vertical: 4, horizontal: 6)
+- moreBuilder: Widget Function(BuildContext context)? = null
+- groupTheme: ButtonGroupThemeData? = null
+- menuTheme: MenuThemeData? = null
+
+### Global density for button groups
+
+You can set a global density for all ButtonGroup children using the Theme extension `ButtonGroupThemeData.visualDensity`. This wraps the group contents in a Theme that overrides `ThemeData.visualDensity`, allowing inner Material buttons to automatically adapt their padding and tap target size.
+
+Set it globally:
+
+```
+MaterialApp(
+  theme: ThemeData(
+    extensions: const <ThemeExtension<dynamic>>[
+      ButtonGroupThemeData(
+        visualDensity: VisualDensity.compact, // or VisualDensity.standard, comfortable, etc.
+      ),
+    ],
+  ),
+  home: const MyHomePage(),
+)
 ```
 
-The demo shows a connected group with a split‑button and an overflow
-menu.  Resize the window to watch items collapse into the **More** menu
-and wrap to new lines.
+Or override per group via `groupTheme`:
 
-## ⚙️ Parameters
+```
+ButtonGroup(
+  groupTheme: const ButtonGroupThemeData(
+    visualDensity: VisualDensity.standard,
+  ),
+  children: [ /* ... */ ],
+)
+```
 
-### `ConnectedButtonGroup`
+See the source for enum options:
 
-| Parameter | Type | Description |
-|---|---|---|
-| `items` | `List<ConnectedButtonItem<T>>` | The list of items to display in order. Each item becomes a segment. |
-| `value` | `T?` | The currently selected value. When non‑null, the corresponding segment is highlighted. Omit for action‑only mode. |
-| `onChanged` | `ValueChanged<T>?` | Called when selection changes. Receives the new value. Ignored if `value` is null. |
-| `onPressed` | `ValueChanged<T>?` | Called when an item is tapped in action‑only mode (i.e. when `value` and `onChanged` are omitted). |
-| `onMenuItemSelected` | `void Function((T itemValue, ConnectedMenuEntry<T> entry))?` | Called when a menu entry is selected. Receives the parent item value and the selected entry. |
-| `overflowStrategy` | `ConnectedOverflowStrategy` | Determines how items that exceed the available width are handled. The default (`menuThenWrap`) collapses trailing items into a menu and then wraps as needed. |
-| `maxLines` | `int?` | Maximum number of rows to allow when wrapping. `null` means unlimited. |
-| `rowSpacing` | `double` | Spacing between wrapped rows. |
-| `runPadding` | `EdgeInsets` | Padding applied inside each row container. |
-| `overflowItem` | `ConnectedButtonItem<T>?` | Optional custom item used as the overflow handle. Its `menu` is ignored and will be populated automatically. |
-| `theme` | `ConnectedButtonGroupThemeData?` | Overrides colours and styles for this instance. |
+- [ButtonGroupType](lib/src/group/button_group_type.dart): connected, standard
+- [GroupSize](lib/src/group/group_size.dart): xs, s, m, l, xl
+- [GroupShape](lib/src/group/group_shape.dart): round, square
+- [OverflowStrategy](lib/src/group/overflow_strategy.dart): menu, wrap
 
-### `ConnectedButtonItem`
+## Scripts and Commands
 
-| Parameter | Type | Description |
-|---|---|---|
-| `value` | `T` | The semantic value of the item. |
-| `label` | `String?` | Text displayed on the button. Optional. |
-| `icon` | `IconData?` | Leading icon for the button. Optional. |
-| `tooltip` | `String?` | Tooltip shown on long press or hover. Optional. |
-| `enabled` | `bool` | Whether the button is enabled. Defaults to `true`. |
-| `menu` | `List<ConnectedMenuEntry<T>>?` | Menu entries attached to this item. If non‑null the item can open a menu. |
-| `isSplit` | `bool` | If `true` and `menu` is non‑null, renders as a split‑button with separate primary and chevron areas. |
-| `onPrimaryPressed` | `VoidCallback?` | Callback for the primary area of a split‑button. Ignored if `isSplit` is false. |
-| `menuAlignment` | `ConnectedMenuAlignment` | Where to align the menu (start/end/auto). |
-| `openMenuOnLongPress` | `bool` | Whether a long press on the primary area should also open the menu. |
+Common development commands for this repo:
 
-### `ConnectedMenuEntry`
+- Get dependencies: flutter pub get (run in root and in example)
+- Format code: dart format .
+- Apply quick fixes: dart fix --apply
+- Analyze: flutter analyze
+- Run tests: flutter test
+- Run the example app: cd example && flutter run
 
-| Parameter | Type | Description |
-|---|---|---|
-| `label` | `String` | Text displayed in the menu. |
-| `icon` | `IconData?` | Leading icon for the menu entry. |
-| `value` | `T?` | Semantic value associated with this entry. |
-| `enabled` | `bool` | Whether the entry is enabled. Defaults to `true`. |
-| `destructive` | `bool` | Whether the entry is destructive. Destructive entries should be styled using an error colour. |
-| `checked` | `bool?` | Whether the entry is checkable. `null` means not checkable. |
-| `onSelected` | `VoidCallback?` | Callback invoked when the entry is selected. |
-| `submenu` | `List<ConnectedMenuEntry<T>>?` | Submenu entries. Submenus are flattened in the current implementation. |
+## Environment Variables
 
-## 👤 Author
-Created by Emily Pauli [BruckCode].
-This package was created as part of a Flutter component library.  It was inspired by Material 3 Expressive patterns and designed to be easy to adopt in your own projects.  Contributions, bug reports and feature requests are welcome!
+- None required for this package.
+- TODO: Document any environment variables if future features require configuration.
+
+## Tests
+
+- Unit/widget tests live under test/ (e.g., test/connected_button_group_test.dart)
+- Run all tests:
+  - flutter test
+
+## Project Structure
+
+- [lib/](lib/)
+  - [lib/button_group.dart](lib/button_group.dart) — package entry point exporting public API
+  - src/
+    - group/ — core ButtonGroup widget and related types (size/shape/overflow/split button)
+    - menu/ — MenuEntry model used by SplitButton/overflow menus
+    - theme/ — ButtonGroupThemeData and theming helpers
+- [example/](example/) — runnable demo app
+  - [example/lib/main.dart](example/lib/main.dart) — demo showcasing connected layout, split button, overflow menu
+- [test/](test/) — tests
+- [pubspec.yaml](pubspec.yaml) — package metadata and dependencies
+- [CHANGELOG.md](CHANGELOG.md) — version history
+- [LICENSE](LICENSE) — MIT License
+
+## License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
+## Author
+
+Created by Emily Pauli (BruckCode / EmilyMonestone).
+This package is part of a Flutter component library inspired by Material 3 Expressive patterns. Contributions, bug reports, and feature requests are welcome!
+
+
+---
+
+## Additional Usage Examples
+
+### Standard group (non-connected)
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:button_group/button_group.dart';
+
+Widget standardGroup() {
+  return ButtonGroup(
+    type: ButtonGroupType.standard,
+    children: [
+      OutlinedButton.icon(
+        onPressed: () {},
+        icon: const Icon(Icons.share),
+        label: const Text('Share'),
+      ),
+      TextButton.icon(
+        onPressed: () {},
+        icon: const Icon(Icons.delete),
+        label: const Text('Delete'),
+      ),
+    ],
+  );
+}
+```
+
+### Wrapping overflow across multiple rows
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:button_group/button_group.dart';
+
+Widget wrappingGroup() {
+  return ButtonGroup(
+    overflowStrategy: OverflowStrategy.wrap,
+    maxLines: 2,
+    rowSpacing: 6,
+    runPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    children: [
+      FilledButton.icon(onPressed: () {}, icon: const Icon(Icons.add), label: const Text('New')),
+      FilledButton.icon(onPressed: () {}, icon: const Icon(Icons.edit), label: const Text('Edit')),
+      FilledButton.icon(onPressed: () {}, icon: const Icon(Icons.copy), label: const Text('Duplicate')),
+      FilledButton.icon(onPressed: () {}, icon: const Icon(Icons.download), label: const Text('Download')),
+      FilledButton.icon(onPressed: () {}, icon: const Icon(Icons.delete), label: const Text('Delete')),
+    ],
+  );
+}
+```
+
+If you prefer a compact single-row layout that overflows into a popup menu, keep the default `OverflowStrategy.menu`.
+
+## Contributing
+
+Contributions are welcome! If you find a bug or have a feature request:
+
+- Open an issue: https://github.com/EmilyMonestone/button_group/issues
+- Submit a pull request. Before submitting:
+  - Run: `flutter pub get` (root and example)
+  - Format: `dart format .`
+  - Lints: `flutter analyze`
+  - Tests: `flutter test`
+
+## Helpful Links
+
+- Pub package: https://pub.dev/packages/button_group
+- Changelog: [CHANGELOG.md](CHANGELOG.md)
+- Example app source: [example/lib/main.dart](example/lib/main.dart)
